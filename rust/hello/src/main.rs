@@ -1,4 +1,16 @@
 use std::collections::HashMap;
+#[derive(Debug)]
+enum MyError {
+    Error1(String),
+}
+
+fn divide_result(num1: i32, num2: i32) -> Result<i32, MyError> {
+    if num2 == 0 {
+        return Err(MyError::Error1(String::from("error!!!")));
+    } else {
+        return Ok(num1 / num2);
+    }
+}
 fn main() {
     let a = 10;
     let b = 15;
@@ -117,17 +129,23 @@ fn main() {
     // Result (has ok type and error type)
     // Err, an enum that contains an error code
     // Ok(value) -> a wrapper that contains value
-    let d = divide_result(4, 2);
-    match d {
-        Ok(v) => println!("{}", v),
-        Err(v) => println!("{:?}", v),
+    let result = divide_result(4, 2);
+    let result1 = divide_result(4, 0);
+    // match result {
+    //     Ok(v) => println!("{}", v),
+    //     Err(v) => println!("{:?}", v),
+    // }
+    if result1.is_ok() {
+        println!("{}", result.unwrap());
     }
+    // println!("Error: {}", result1.expect("error!!!"));
+    println!("{}", result1.unwrap_or(-1));
 
-    if d.is_ok() {
-        println!("{}", d.unwrap());
-    }
+    // if result.is_ok() {
+    //     println!("{}", result.unwrap());
+    // }
 
-    println!("{}", d.unwrap_or(-1));
+    // println!("{}", result.unwrap_or(-1));
 }
 pub fn is_even(num: u8) -> bool {
     let degit: u8 = num % 2;
@@ -173,22 +191,10 @@ enum MyEnum {
     C { x: i32, y: i32 },
 }
 
-#[derive(Debug)]
-enum MyError {
-    Error1,
-}
-
 pub fn divide(num1: i32, num2: i32) -> Option<i32> {
     if num2 == 0 {
         return None;
     } else {
         return Some(num1 / num2);
     }
-}
-
-fn divide_result(num1: i32, num2: i32) -> Result<i32, MyError> {
-    if num2 == 0 {
-        return Err(MyError::Error1);
-    }
-    return Ok(num1 / num2);
 }
