@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 fn main() {
     let a = 10;
     let b = 15;
@@ -59,8 +60,74 @@ fn main() {
     // match statement (switch case)
     match_statement();
 
-    //Struct
-    
+    //enum
+    let a: MyEnum = MyEnum::A;
+    let b: MyEnum = MyEnum::B(5);
+    let c: MyEnum = MyEnum::C { x: 5, y: 5 };
+
+    println!("enum a {:?}", a);
+    println!("enum b {:?}", b);
+    println!("enum c {:?}", c);
+
+    if let MyEnum::B(val) = b {
+        println!("{}", val);
+    }
+
+    if let MyEnum::C { x, y } = c {
+        println!("{}, {}", x, y)
+    }
+
+    // vector
+    let mut vec: Vec<i64> = vec![1, 2, 3, 4, 5, 6];
+    vec.push(7);
+    println!("vec: {:?}", vec);
+    vec.pop();
+    println!("vec: {:?}", vec);
+
+    // hashmap
+    let mut hashmap = HashMap::new();
+    let key1: &str = "key1";
+    let key2: &str = "key2";
+
+    hashmap.insert(key1, "Hello Word");
+    hashmap.insert(key2, "Test key 2");
+
+    // get key of hashmap using reference (pointer)
+    match hashmap.get(&key1) {
+        Some(str) => println!("hash_map: {}", str),
+        None => println!("Does not include key"),
+    };
+
+    match hashmap.get(&"0") {
+        Some(str) => println!("hash_map: {}", str),
+        None => println!("Does not include key"),
+    };
+
+    hashmap.remove(&key2);
+    println!("{:?}", hashmap);
+
+    // Options -> tra ve 2 gia tri
+    // None -> if program is crash
+    // Some(value) -> tuple struct that wraps a value with type T
+    println!("divide, {:?}", divide(4, 3).unwrap());
+
+    //panic when unwrap None type
+    println!("divide, {:?}", divide(4, 0));
+
+    // Result (has ok type and error type)
+    // Err, an enum that contains an error code
+    // Ok(value) -> a wrapper that contains value
+    let d = divide_result(4, 2);
+    match d {
+        Ok(v) => println!("{}", v),
+        Err(v) => println!("{:?}", v),
+    }
+
+    if d.is_ok() {
+        println!("{}", d.unwrap());
+    }
+
+    println!("{}", d.unwrap_or(-1));
 }
 pub fn is_even(num: u8) -> bool {
     let degit: u8 = num % 2;
@@ -98,4 +165,30 @@ pub fn match_statement() {
         3..=4 => println!("3 ... 4"),
         _ => println!("default"),
     }
+}
+#[derive(Debug)]
+enum MyEnum {
+    A,
+    B(i32),
+    C { x: i32, y: i32 },
+}
+
+#[derive(Debug)]
+enum MyError {
+    Error1,
+}
+
+pub fn divide(num1: i32, num2: i32) -> Option<i32> {
+    if num2 == 0 {
+        return None;
+    } else {
+        return Some(num1 / num2);
+    }
+}
+
+fn divide_result(num1: i32, num2: i32) -> Result<i32, MyError> {
+    if num2 == 0 {
+        return Err(MyError::Error1);
+    }
+    return Ok(num1 / num2);
 }
